@@ -1,14 +1,14 @@
 {
   "expo": {
     "name": "Liquid Glass Demo",
-    "slug": "lense-effect",
+    "slug": "glass-lens-effect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "scheme": "lense-effect",
+    "scheme": "glass-lens-effect",
     "experiments": {
-      "baseUrl": "/lense-effect"
+      "baseUrl": "/glass-lens-effect"
     },
     "splash": {
       "image": "./assets/splash-icon.png",

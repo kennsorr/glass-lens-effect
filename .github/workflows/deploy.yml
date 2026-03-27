@@ -33,7 +33,7 @@ jobs:
 
       - name: Export static web build
         env:
-          EXPO_PUBLIC_BASE_URL: /lense-effect
+          EXPO_PUBLIC_BASE_URL: /glass-lens-effect
         run: npx expo export --platform web
 
       - name: Copy CanvasKit WASM to dist

@@ -2,7 +2,7 @@
 
 A React Native + Expo project demonstrating how to reproduce Apple's **Liquid Glass** (iOS 26) lens effect using GPU-accelerated SkSL shaders via `@shopify/react-native-skia`.
 
-**[Live Demo](https://kennsorr.github.io/lense-effect/)** — runs in the browser via CanvasKit WASM
+**[Live Demo](https://kennsorr.github.io/glass-lens-effect/)** — runs in the browser via CanvasKit WASM
 
 ## What's Inside
 
