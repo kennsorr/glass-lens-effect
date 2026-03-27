@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from "react";
-import { View, Text, StyleSheet, useWindowDimensions, ScrollView, Platform, PanResponder } from "react-native";
+import { View, Text, StyleSheet, useWindowDimensions, ScrollView, Platform } from "react-native";
 import { ControlSlider } from "../components/ControlSlider";
 import { useSkiaReady, SkiaLoadingFallback } from "../components/SkiaWeb";
 
@@ -17,6 +17,7 @@ function InteractiveLensContent() {
   const canvasHeight = windowHeight * 0.62;
 
   const [mousePos, setMousePos] = useState({ x: width / 2, y: canvasHeight / 2 });
+  const [pinned, setPinned] = useState(false);
   const [ior, setIor] = useState(1.5);
   const [bevelPct, setBevelPct] = useState(0.6);
   const [dispersion, setDispersion] = useState(1.0);
@@ -25,19 +26,60 @@ function InteractiveLensContent() {
   const [radiusPct, setRadiusPct] = useState(0.2);
 
   const radius = radiusPct * width;
+  const canvasRef = useRef<View>(null);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: (e) => {
-        setMousePos({ x: e.nativeEvent.locationX, y: e.nativeEvent.locationY });
-      },
-      onPanResponderMove: (e) => {
-        setMousePos({ x: e.nativeEvent.locationX, y: e.nativeEvent.locationY });
-      },
-    })
-  ).current;
+  const handleMove = useCallback(
+    (pageX: number, pageY: number) => {
+      if (pinned) return;
+      canvasRef.current?.measure?.(
+        (_x: number, _y: number, _w: number, _h: number, px: number, py: number) => {
+          setMousePos({ x: pageX - px, y: pageY - py });
+        }
+      );
+    },
+    [pinned]
+  );
+
+  const handleClick = useCallback(() => {
+    setPinned((p) => !p);
+  }, []);
+
+  const webHandlers =
+    Platform.OS === "web"
+      ? {
+          onMouseMove: (e: any) => handleMove(e.nativeEvent.pageX, e.nativeEvent.pageY),
+          onClick: handleClick,
+          onTouchMove: (e: any) => {
+            const touch = e.nativeEvent.touches[0];
+            if (touch) handleMove(touch.pageX, touch.pageY);
+          },
+        }
+      : {};
+
+  const nativeHandlers =
+    Platform.OS !== "web"
+      ? {
+          onStartShouldSetResponder: () => true,
+          onMoveShouldSetResponder: () => true,
+          onResponderGrant: (e: any) => {
+            handleClick();
+            if (!pinned) {
+              setMousePos({
+                x: e.nativeEvent.locationX,
+                y: e.nativeEvent.locationY,
+              });
+            }
+          },
+          onResponderMove: (e: any) => {
+            if (!pinned) {
+              setMousePos({
+                x: e.nativeEvent.locationX,
+                y: e.nativeEvent.locationY,
+              });
+            }
+          },
+        }
+      : {};
 
   const uniforms = {
     iResolution: vec(width, canvasHeight),
@@ -53,14 +95,21 @@ function InteractiveLensContent() {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} scrollEnabled={false}>
-      <View {...panResponder.panHandlers} style={{ width, height: canvasHeight }}>
-        <Canvas style={{ width, height: canvasHeight }}>
+      <View
+        ref={canvasRef}
+        style={{ width, height: canvasHeight, cursor: pinned ? "pointer" : "none" } as any}
+        {...webHandlers}
+        {...nativeHandlers}
+      >
+        <Canvas style={{ width, height: canvasHeight }} pointerEvents="none">
           <Fill>
             <Shader source={getLiquidGlassShader()} uniforms={uniforms} />
           </Fill>
         </Canvas>
         <View style={styles.touchHint} pointerEvents="none">
-          <Text style={styles.touchHintText}>Drag to move the lens</Text>
+          <Text style={styles.touchHintText}>
+            {pinned ? "Click to unpin lens" : "Move to control lens · Click to pin"}
+          </Text>
         </View>
       </View>
 

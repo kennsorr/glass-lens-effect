@@ -10,22 +10,16 @@ import { useRouter } from "expo-router";
 
 const DEMOS = [
   {
-    title: "Basic Lens Refraction",
-    subtitle: "Snell's Law in action — a static convex lens that bends light",
-    route: "/basic-lens" as const,
-    color: "#48dbfb",
+    title: "Interactive Liquid Glass",
+    subtitle: "Move a lens around — chromatic aberration, blur & specular in real-time",
+    route: "/interactive-lens" as const,
+    color: "#ff6b6b",
   },
   {
     title: "Frosted Glass Panel",
-    subtitle: "Squircle-shaped panel with backdrop blur, refraction & specular highlights",
+    subtitle: "Move a squircle panel — backdrop blur, refraction & specular highlights",
     route: "/glass-panel" as const,
     color: "#a55eea",
-  },
-  {
-    title: "Interactive Liquid Glass",
-    subtitle: "Drag a lens around — chromatic aberration, blur & specular in real-time",
-    route: "/interactive-lens" as const,
-    color: "#ff6b6b",
   },
 ];
 

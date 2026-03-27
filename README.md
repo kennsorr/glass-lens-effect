@@ -6,23 +6,20 @@ A React Native + Expo project demonstrating how to reproduce Apple's **Liquid Gl
 
 ## What's Inside
 
-Three progressive demos, each building on the previous:
+Two interactive demos — move your mouse (or finger) to control the lens in real-time. Click to pin/unpin.
 
-### 1. Basic Lens Refraction
-A static convex lens that bends background content using **Snell's Law** (`n₁sin(θ₁) = n₂sin(θ₂)`). Adjustable IOR, bevel width, and radius let you see how each parameter affects the optical distortion.
+### 1. Interactive Liquid Glass
+A movable magnifying lens combining all of Apple's Liquid Glass techniques:
+- **Snell's Law refraction** — convex lens bending via `n₁sin(θ₁) = n₂sin(θ₂)`
+- **Chromatic aberration** — R/G/B channels refract at different strengths
+- **Frosted blur** — multi-tap sampling softens the refracted image
+- **Specular highlights** — Fresnel-like rim light at grazing angles
 
 ### 2. Frosted Glass Panel
-A squircle-shaped panel (Apple's signature superellipse, `|x/a|ⁿ + |y/b|ⁿ = 1`) with:
+A movable squircle-shaped panel (Apple's signature superellipse, `|x/a|ⁿ + |y/b|ⁿ = 1`) with:
 - **SDF-driven bevel refraction** along the edges
 - **Multi-tap frosted blur** simulating translucent glass
 - **Specular rim highlights** using Fresnel approximation
-- **Tinted glass overlay**
-
-### 3. Interactive Liquid Glass
-A draggable magnifying lens combining all effects:
-- **Chromatic aberration** — R/G/B channels refract at different strengths
-- **Real-time blur + refraction** via a single SkSL fragment shader
-- **60fps gesture tracking** — Reanimated shared values → shader uniforms, all on the UI thread
 
 ## Tech Stack
 
@@ -59,13 +56,11 @@ npx expo start --android
 ├── app/
 │   ├── _layout.tsx          # Root layout (Stack navigator, dark theme)
 │   ├── index.tsx            # Home screen with demo links
-│   ├── basic-lens.tsx       # Demo 1: Snell's Law refraction
-│   ├── glass-panel.tsx      # Demo 2: Frosted squircle panel
-│   └── interactive-lens.tsx # Demo 3: Draggable liquid glass
+│   ├── interactive-lens.tsx # Interactive liquid glass lens
+│   └── glass-panel.tsx      # Interactive frosted squircle panel
 ├── shaders/
-│   ├── lens.ts              # Basic convex lens SkSL shader
-│   ├── frostedGlass.ts      # Frosted glass panel SkSL shader
-│   └── liquidGlass.ts       # Full liquid glass SkSL shader
+│   ├── liquidGlass.ts       # Full liquid glass SkSL shader
+│   └── frostedGlass.ts      # Frosted glass panel SkSL shader
 ├── components/
 │   ├── ControlSlider.tsx     # Labeled parameter slider
 │   └── SkiaWeb.tsx           # CanvasKit WASM loader for web
