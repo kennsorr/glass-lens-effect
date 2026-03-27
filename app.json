@@ -7,6 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "scheme": "lense-effect",
+    "experiments": {
+      "baseUrl": "/lense-effect"
+    },
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",

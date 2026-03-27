@@ -9,7 +9,12 @@ function loadSkia(): Promise<void> {
   if (!skiaLoadPromise) {
     skiaLoadPromise = import("@shopify/react-native-skia/lib/module/web")
       .then((mod) =>
-        (mod as any).LoadSkiaWeb({ locateFile: () => "/canvaskit.wasm" })
+        (mod as any).LoadSkiaWeb({
+          locateFile: () => {
+            const base = (process.env.EXPO_PUBLIC_BASE_URL as string) || "";
+            return `${base}/canvaskit.wasm`;
+          },
+        })
       )
       .then(() => {
         skiaReady = true;
